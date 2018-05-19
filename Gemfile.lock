@@ -1,0 +1,41 @@
+GIT
+  remote: https://github.com/merongivian/tone.rb
+  revision: 6115d2e89d6d00e67b2d0fd7e942af4703b46e93
+  specs:
+    tone.rb (0.1.0)
+      opal (>= 0.10.2)
+
+PATH
+  remote: .
+  specs:
+    negasonic (0.1.0)
+      tone.rb
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    ast (2.4.0)
+    hike (1.2.3)
+    minitest (5.11.3)
+    opal (0.11.0)
+      ast (>= 2.3.0)
+      hike (~> 1.2)
+      parser (= 2.3.3.1)
+      sourcemap (~> 0.1.0)
+    parser (2.3.3.1)
+      ast (~> 2.2)
+    rake (10.5.0)
+    sourcemap (0.1.1)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  bundler (~> 1.16)
+  minitest (~> 5.0)
+  negasonic!
+  rake (~> 10.0)
+  tone.rb!
+
+BUNDLED WITH
+   1.16.2

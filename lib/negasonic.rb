@@ -1,6 +1,10 @@
 if RUBY_ENGINE == 'opal'
   require 'tone'
-  require 'negasonic/all'
+  require 'negasonic/instrument'
+  require 'negasonic/looped_event'
+  require 'negasonic/dsl'
+
+  extend Negasonic::DSL
 else
   require 'opal'
 

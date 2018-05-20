@@ -27,7 +27,7 @@ module Negasonic
             note
           else
             # is a midi note
-            2**((note-69)/12) * 440
+            (2**((note-69)/12) * 440).to_f
           end
         end
       end

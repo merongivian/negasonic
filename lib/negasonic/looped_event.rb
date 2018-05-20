@@ -1,3 +1,4 @@
+require 'js'
 require 'negasonic/looped_event/part'
 require 'negasonic/looped_event/pattern'
 require 'negasonic/looped_event/sequence'
@@ -22,7 +23,7 @@ module Negasonic
 
       def to_tone_notes(notes)
         notes.map do |note|
-          if note.is_a?(String)
+          if JS.typeof(note) == 'string'
             note
           else
             # is a midi note

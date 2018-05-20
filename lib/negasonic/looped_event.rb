@@ -20,9 +20,14 @@ module Negasonic
         @events << looped_element
       end
 
-      def midi_notes_to_frequencies(midi_notes)
-        midi_notes.map do |midi_note|
-          2**((midi_note-69)/12) * 440
+      def to_tone_notes(notes)
+        notes.map do |note|
+          if note.is_a?(String)
+            note
+          else
+            # is a midi note
+            2**((note-69)/12) * 440
+          end
         end
       end
     end

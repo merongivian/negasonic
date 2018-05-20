@@ -15,7 +15,7 @@ module Negasonic
 
       def initialize(synth, notes = [])
         @synth = synth
-        @notes = LoopedEvent.midi_notes_to_frequencies(notes)
+        @notes = LoopedEvent.to_tone_notes(notes)
       end
 
       def start(duration, type)

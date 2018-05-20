@@ -13,7 +13,7 @@ module Negasonic
       end
 
       def play(*notes)
-        @segments << notes
+        @segments << LoopedEvent.midi_notes_to_frequencies(notes)
       end
 
       private

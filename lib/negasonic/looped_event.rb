@@ -19,6 +19,12 @@ module Negasonic
         looped_element.loop = true
         @events << looped_element
       end
+
+      def midi_notes_to_frequencies(midi_notes)
+        midi_notes.map do |midi_note|
+          2**((midi_note-69)/12) * 440
+        end
+      end
     end
   end
 end

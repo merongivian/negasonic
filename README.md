@@ -1,8 +1,8 @@
 # Negasonic
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/negasonic`. To experiment with that code, run `bin/console` for an interactive prompt.
+Ruby DSL for music live coding in the browser, you can play with it in the [online editor](https://negasonic.herokuapp.com/)
 
-TODO: Delete this and the text above, and describe your gem
+DISCLAIMER: The current DSL might change in the future
 
 ## Installation
 
@@ -14,7 +14,7 @@ gem 'negasonic'
 
 And then execute:
 
-    $ bundle
+    $ bundle install
 
 Or install it yourself as:
 
@@ -22,17 +22,32 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+Most of the audio capabilities are handled by [Tone.rb](https://github.com/merongivian/tone.rb), which is a wrapper
+over [Tone.js](https://github.com/Tonejs/Tone.js), you can check how effects/synths works in the [official docs](https://tonejs.github.io/docs/)
 
-## Development
+`instrument` is in charged of hooking up a synth with a chain of effects
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+```ruby
+# instruments need to be named in order to use it later
+instrument(:lead, synth: :am, volume: 1) do
+  # The order of the effects will affect the final sound
+  vibrato frequency: 5, depth: 0.1
+  jc_reverb room_size: 0.5
+end
+```
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+In `pattern` we define which notes will be played in the instrument. The interval value uses
+Tone.js's time notation, [read about time notation](https://github.com/Tonejs/Tone.js/wiki/Time)
+
+```ruby
+pattern(instrument: :lead, interval: '4n', type: :random, notes: [36, "D2", 40, "A2"])
+```
+
+Notes can be plain normal or MIDI notes
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/negasonic.
+Bug reports and pull requests are welcome on GitHub at https://github.com/merongivian/negasonic.
 
 ## License
 

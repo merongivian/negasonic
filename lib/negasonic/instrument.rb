@@ -44,9 +44,11 @@ module Negasonic
         old_nodes = @nodes
         @nodes = new_nodes
 
-        Tone::Transport.schedule_after(1) do |time|
+        Tone::Transport.schedule_once('+1m') do |time|
           old_nodes.each(&:dispose)
         end
+      else
+        new_synth.dispose
       end
     end
   end

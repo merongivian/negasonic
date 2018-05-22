@@ -46,6 +46,22 @@ module Negasonic
       def ping_pong_delay(**opts)
         @nodes << Tone::Effect::PingPongDelay.new(**opts)
       end
+
+      def auto_wah(**opts)
+        @nodes << Tone::Effect::AutoWah.new(**opts)
+      end
+
+      def bit_crusher(**opts)
+        @nodes << Tone::Effect::BitCrusher.new(**opts)
+      end
+
+      def chebyshev(**opts)
+        @nodes << Tone::Effect::Chebyshev.new(**opts)
+      end
+
+      def pitch_shift(**opts)
+        @nodes << Tone::Effect::PitchShift.new(**opts)
+      end
     end
   end
 end

@@ -21,7 +21,7 @@ module Negasonic
       end
     end
 
-    attr_reader :input_node, :name
+    attr_reader :input_node, :name, :effects_set
 
     def initialize(name)
       @name = name

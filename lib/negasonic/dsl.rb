@@ -30,7 +30,8 @@ module Negasonic
       synth_node = Negasonic::Instrument::Synth.send(synth, { volume: volume })
 
       instrument.tap do |i|
-        i.instance_eval(&block)
+        i.effects_set.reload
+        i.instance_eval(&block) if block_given?
         i.connect_nodes(synth_node)
       end
     end

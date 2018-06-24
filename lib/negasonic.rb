@@ -5,6 +5,10 @@ if RUBY_ENGINE == 'opal'
   require 'negasonic/dsl'
 
   extend Negasonic::DSL
+
+  module Negasonic
+    NOTATION = "n"
+  end
 else
   require 'opal'
 

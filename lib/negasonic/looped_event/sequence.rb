@@ -6,7 +6,9 @@ module Negasonic
         @segments = segments
       end
 
-      def start(duration)
+      def start
+        duration = @segments.count.to_s + Negasonic::NOTATION
+
         do_start(duration) do |time, note|
           @synth.trigger_attack_release(note, duration, time)
         end

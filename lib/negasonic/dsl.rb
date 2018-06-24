@@ -8,19 +8,19 @@ module Negasonic
       the_loop.start
     end
 
-    def sequence(instrument:, interval: , &block)
+    def sequence(instrument:, &block)
       the_instrument = Negasonic::Instrument.find(instrument)
 
       the_loop = Negasonic::LoopedEvent::Sequence.new(the_instrument.input_node)
       the_loop.instance_eval(&block)
-      the_loop.start(interval)
+      the_loop.start
     end
 
-    def pattern(instrument:, interval:, type:, notes:)
+    def pattern(instrument:, type:, notes:)
       the_instrument = Negasonic::Instrument.find(instrument)
 
       Negasonic::LoopedEvent::Pattern.new(the_instrument.input_node, notes)
-                                     .start(interval, type)
+                                     .start(type)
     end
 
     def instrument(name, synth:, volume: nil, &block)

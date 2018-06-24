@@ -18,8 +18,10 @@ module Negasonic
         @notes = LoopedEvent.to_tone_notes(notes)
       end
 
-      def start(duration, type)
+      def start(type)
         raise 'invalid pattern type' unless TYPES.keys.include?(type)
+
+        duration = @notes.count.to_s + Negasonic::NOTATION
 
         do_start(duration, TYPES[type]) do |time, note|
           @synth.trigger_attack_release(note, duration, time)

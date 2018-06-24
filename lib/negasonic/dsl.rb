@@ -8,7 +8,7 @@ module Negasonic
       the_loop.start
     end
 
-    def sequence(instrument:, &block)
+    def loop(instrument:, &block)
       the_instrument = Negasonic::Instrument.find(instrument)
 
       the_loop = Negasonic::LoopedEvent::Sequence.new(the_instrument.input_node)

@@ -27,6 +27,7 @@ module Negasonic
     def initialize(name)
       @name = name
       @nodes = []
+      @loops = []
       @effects_set = EffectsSet.new
     end
 
@@ -35,10 +36,16 @@ module Negasonic
       @effects_set.instance_eval(&block)
     end
 
+    def dispose_loops
+      @loops.each(&:dispose)
+      @loops = []
+    end
+
     def loop(&block)
       the_loop = Negasonic::LoopedEvent::Sequence.new(@input_node)
       the_loop.instance_eval(&block)
       the_loop.start
+      @loops << the_loop
     end
 
     def connect_nodes(new_synth)

@@ -14,6 +14,10 @@ module Negasonic
         end
       end
 
+      def dispose
+        @tone_sequence && @tone_sequence.dispose
+      end
+
       def play(*notes)
         @segments << LoopedEvent.to_tone_notes(notes)
       end
@@ -21,7 +25,10 @@ module Negasonic
       private
 
       def do_start(duration, &block)
-        LoopedEvent.start(Tone::Event::Sequence.new @segments, duration, &block)
+        @tone_sequence =
+          Tone::Event::Sequence.new(@segments, duration, &block)
+
+        LoopedEvent.start(@tone_sequence)
       end
     end
   end

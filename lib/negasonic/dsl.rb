@@ -15,16 +15,16 @@ module Negasonic
                                      .start(type)
     end
 
-    def instrument(name, synth:, volume: nil, &block)
+    def with_instrument(name, synth:, volume: nil, &block)
+      synth_node = Negasonic::Instrument::Synth.send(synth, { volume: volume })
       instrument = Negasonic::Instrument.find(name) ||
                    Negasonic::Instrument.add(name)
 
-      synth_node = Negasonic::Instrument::Synth.send(synth, { volume: volume })
-
-      instrument.tap do |i|
-        i.effects_set.reload
-        i.connect_nodes(synth_node)
-        i.instance_eval(&block) if block_given?
+      Negasonic.schedule_next_loop do
+        instrument.dispose_loops
+        instrument.effects_set.reload
+        instrument.connect_nodes(synth_node)
+        instrument.instance_eval(&block) if block_given?
       end
     end
   end

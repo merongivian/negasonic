@@ -8,6 +8,13 @@ if RUBY_ENGINE == 'opal'
 
   module Negasonic
     NOTATION = "n"
+
+    def self.schedule_next_loop(&block)
+      Tone::Transport.schedule_once(
+        Tone::Transport.next_subdivision("1#{NOTATION}"),
+        &block
+      )
+    end
   end
 else
   require 'opal'

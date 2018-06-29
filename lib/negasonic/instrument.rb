@@ -1,5 +1,6 @@
 require 'negasonic/instrument/effects_set'
 require 'negasonic/instrument/synth'
+require 'negasonic/dsl'
 
 module Negasonic
   class Instrument
@@ -32,6 +33,12 @@ module Negasonic
     def effects(&block)
       @effects_set.reload
       @effects_set.instance_eval(&block)
+    end
+
+    def loop(&block)
+      the_loop = Negasonic::LoopedEvent::Sequence.new(@input_node)
+      the_loop.instance_eval(&block)
+      the_loop.start
     end
 
     def connect_nodes(new_synth)

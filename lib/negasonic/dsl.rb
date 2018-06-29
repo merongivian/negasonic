@@ -8,14 +8,6 @@ module Negasonic
       the_loop.start
     end
 
-    def loop(instrument:, &block)
-      the_instrument = Negasonic::Instrument.find(instrument)
-
-      the_loop = Negasonic::LoopedEvent::Sequence.new(the_instrument.input_node)
-      the_loop.instance_eval(&block)
-      the_loop.start
-    end
-
     def pattern(instrument:, type:, notes:)
       the_instrument = Negasonic::Instrument.find(instrument)
 
@@ -31,8 +23,8 @@ module Negasonic
 
       instrument.tap do |i|
         i.effects_set.reload
-        i.instance_eval(&block) if block_given?
         i.connect_nodes(synth_node)
+        i.instance_eval(&block) if block_given?
       end
     end
   end

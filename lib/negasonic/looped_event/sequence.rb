@@ -1,6 +1,8 @@
 module Negasonic
   module LoopedEvent
     class Sequence
+      attr_reader :synth
+
       def initialize(synth, segments = [])
         @synth = synth
         @segments = segments

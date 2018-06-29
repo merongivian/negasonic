@@ -20,10 +20,12 @@ module Negasonic
       instrument = Negasonic::Instrument.find(name) ||
                    Negasonic::Instrument.add(name)
 
+      instrument.input_node = synth_node
+
       Negasonic.schedule_next_cycle do
         instrument.dispose_cycles
-        instrument.input_node = synth_node
         instrument.instance_eval(&block) if block_given?
+        instrument.cycles.each(&:start)
       end
     end
   end

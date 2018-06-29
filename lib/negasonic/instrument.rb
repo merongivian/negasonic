@@ -22,7 +22,7 @@ module Negasonic
       end
     end
 
-    attr_reader :name, :effects_set
+    attr_reader :name, :cycles
     attr_writer :input_node
 
     def initialize(name)
@@ -36,9 +36,15 @@ module Negasonic
     end
 
     def cycle(&block)
-      the_cycle = Negasonic::LoopedEvent::Sequence.new(@input_node)
+      cycle_input_node =
+        if @cycles.none? { |other_cycle| other_cycle.synth.equal?(@input_node) }
+          @input_node
+        else
+          @input_node.clone
+        end
+
+      the_cycle = Negasonic::LoopedEvent::Sequence.new(cycle_input_node)
       the_cycle.instance_eval(&block)
-      the_cycle.start
       @cycles << the_cycle
     end
   end

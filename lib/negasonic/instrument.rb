@@ -27,19 +27,19 @@ module Negasonic
 
     def initialize(name)
       @name = name
-      @loops = []
+      @cycles = []
     end
 
-    def dispose_loops
-      @loops.each(&:dispose)
-      @loops = []
+    def dispose_cycles
+      @cycles.each(&:dispose)
+      @cycles = []
     end
 
-    def loop(&block)
-      the_loop = Negasonic::LoopedEvent::Sequence.new(@input_node)
-      the_loop.instance_eval(&block)
-      the_loop.start
-      @loops << the_loop
+    def cycle(&block)
+      the_cycle = Negasonic::LoopedEvent::Sequence.new(@input_node)
+      the_cycle.instance_eval(&block)
+      the_cycle.start
+      @cycles << the_cycle
     end
   end
 end

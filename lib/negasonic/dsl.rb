@@ -22,8 +22,7 @@ module Negasonic
 
       Negasonic.schedule_next_loop do
         instrument.dispose_loops
-        instrument.effects_set.reload
-        instrument.connect_nodes(synth_node)
+        instrument.input_node = synth_node
         instrument.instance_eval(&block) if block_given?
       end
     end

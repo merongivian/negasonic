@@ -22,18 +22,12 @@ module Negasonic
       end
     end
 
-    attr_reader :input_node, :name, :effects_set
+    attr_reader :name, :effects_set
+    attr_writer :input_node
 
     def initialize(name)
       @name = name
-      @nodes = []
       @loops = []
-      @effects_set = EffectsSet.new
-    end
-
-    def effects(&block)
-      @effects_set.reload
-      @effects_set.instance_eval(&block)
     end
 
     def dispose_loops
@@ -46,24 +40,6 @@ module Negasonic
       the_loop.instance_eval(&block)
       the_loop.start
       @loops << the_loop
-    end
-
-    def connect_nodes(new_synth)
-      new_nodes = [new_synth, @effects_set.nodes].flatten
-
-      if @nodes != new_nodes
-        @input_node = new_synth
-        @input_node.chain(*@effects_set.nodes)
-
-        old_nodes = @nodes
-        @nodes = new_nodes
-
-        Tone::Transport.schedule_once('+1m') do |time|
-          old_nodes.each(&:dispose)
-        end
-      else
-        new_synth.dispose
-      end
     end
   end
 end

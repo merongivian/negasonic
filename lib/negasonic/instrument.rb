@@ -45,6 +45,8 @@ module Negasonic
     def base_input_node=(new_base_input_node)
       if @base_input_node != new_base_input_node
         @base_input_node = new_base_input_node
+
+        connect_to_effects(@base_input_node, @effect_nodes)
         @input_nodes = [@base_input_node]
       else
         new_base_input_node.dispose
@@ -56,14 +58,19 @@ module Negasonic
       @effect_nodes != @effects_set.nodes
     end
 
-    def connect_synth_to_new_effects
+    def swap_effects
       old_effect_nodes = @effect_nodes
       new_effect_nodes = @effects_set.nodes
 
-      connect_to_effects(@base_input_node, new_effect_nodes)
       @effect_nodes = new_effect_nodes
 
       old_effect_nodes.each(&:dispose)
+    end
+
+    def connect_input_nodes_to_effects
+      @input_nodes.each do |input_node|
+        connect_to_effects(input_node, @effect_nodes)
+      end
     end
 
     def connect_new_effects

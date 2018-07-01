@@ -32,8 +32,9 @@ module Negasonic
 
       Negasonic.schedule_next_cycle do
         if instrument.effects_changed?
-          instrument.connect_synth_to_new_effects
+          instrument.swap_effects
         end
+        instrument.connect_input_nodes_to_effects
         old_cycles.each(&:dispose)
         instrument.cycles.each(&:start)
       end

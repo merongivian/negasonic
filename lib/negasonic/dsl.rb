@@ -20,11 +20,22 @@ module Negasonic
       instrument = Negasonic::Instrument.find(name) ||
                    Negasonic::Instrument.add(name)
 
+      old_cycles = instrument.cycles
+      instrument.reload
+
       instrument.base_input_node = synth_node
+      instrument.instance_eval(&block) if block_given?
+
+      if instrument.effects_changed?
+        instrument.connect_new_effects
+      end
 
       Negasonic.schedule_next_cycle do
-        instrument.reload
-        instrument.instance_eval(&block) if block_given?
+        if instrument.effects_changed?
+          instrument.connect_synth_to_new_effects
+        end
+        old_cycles.each(&:dispose)
+        instrument.cycles.each(&:start)
       end
     end
   end

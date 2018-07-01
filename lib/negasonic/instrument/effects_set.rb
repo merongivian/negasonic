@@ -11,6 +11,19 @@ module Negasonic
         @nodes = []
       end
 
+      def chain
+        return if nodes.empty?
+
+        last_node_connected, *rest_of_nodes = @nodes
+
+        rest_of_nodes.each do |node|
+          last_node_connected.connect(node.to_n)
+          last_node_connected = node
+        end
+
+        last_node_connected.connect_to_master
+      end
+
       def vibrato(**opts)
         @nodes << Tone::Effect::Vibrato.new(**opts)
       end

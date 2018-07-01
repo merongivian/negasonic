@@ -23,22 +23,22 @@ module Negasonic
     end
 
     attr_reader :name, :cycles
-    attr_writer :input_node
 
     def initialize(name)
       @name = name
       @cycles = []
       @input_nodes = []
       @used_input_nodes = 0
+
+      # extractable code
+      @effect_nodes = []
+      @effects_set = EffectsSet.new
+      # extractable code
     end
 
     def reload
-      dispose_cycles
       @used_input_nodes = 0
-    end
-
-    def dispose_cycles
-      @cycles.each(&:dispose)
+      @effects_set.reload
       @cycles = []
     end
 
@@ -50,6 +50,45 @@ module Negasonic
         new_base_input_node.dispose
       end
     end
+
+    # extractable code
+    def effects_changed?
+      @effect_nodes != @effects_set.nodes
+    end
+
+    def connect_synth_to_new_effects
+      old_effect_nodes = @effect_nodes
+      new_effect_nodes = @effects_set.nodes
+
+      connect_to_effects(@base_input_node, new_effect_nodes)
+      @effect_nodes = new_effect_nodes
+
+      old_effect_nodes.each(&:dispose)
+    end
+
+    def connect_new_effects
+      @effects_set.chain
+    end
+
+    def connect_to_effects(input, effects)
+      if effects.any?
+        input.connect(effects.first)
+      else
+        input.connect_to_master
+      end
+    end
+    # extractable code
+
+    #########
+    ## DSL ##
+    #########
+
+    # extractable code
+    def with_fx(&block)
+      @effects_set.reload
+      @effects_set.instance_eval(&block)
+    end
+    # extractable code
 
     def cycle(&block)
       cycle_input_node =
@@ -63,7 +102,6 @@ module Negasonic
 
       the_cycle = Negasonic::LoopedEvent::Sequence.new(cycle_input_node)
       the_cycle.instance_eval(&block)
-      the_cycle.start
       @used_input_nodes += 1
       @cycles << the_cycle
     end

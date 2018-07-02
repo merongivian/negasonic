@@ -29,7 +29,7 @@ module Negasonic
           last_node_connected = node
         end
 
-        last_node_connected.connect_to_master
+        last_node_connected.to_master
       end
 
       def vibrato(**opts)

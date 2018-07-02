@@ -75,7 +75,7 @@ module Negasonic
       if effects.any?
         input.connect(effects.first)
       else
-        input.connect_to_master
+        input.to_master
       end
     end
 

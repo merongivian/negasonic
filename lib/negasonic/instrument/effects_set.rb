@@ -3,6 +3,14 @@ module Negasonic
     class EffectsSet
       attr_reader :nodes
 
+      def self.create_from_array(nodes_names)
+        new.tap do |effects_set|
+          nodes_names.each do |node_name|
+            effects_set.send(node_name)
+          end
+        end
+      end
+
       def initialize
         @nodes = []
       end

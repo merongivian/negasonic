@@ -15,7 +15,7 @@ module Negasonic
                                      .start(type)
     end
 
-    def with_instrument(name, synth:, volume: nil, &block)
+    def with_instrument(name, synth:, volume: nil, fx: Negasonic::Instrument::EffectsSet.new, &block)
       synth_node = Negasonic::Instrument::Synth.send(synth, { volume: volume })
       instrument = Negasonic::Instrument.find(name) ||
                    Negasonic::Instrument.add(name)
@@ -26,17 +26,23 @@ module Negasonic
       instrument.base_input_node = synth_node
       instrument.instance_eval(&block) if block_given?
 
-      if instrument.effects_changed?
-        instrument.connect_new_effects
+      if instrument.effects_changed?(fx)
+        fx.chain
       end
 
       Negasonic.schedule_next_cycle do
-        if instrument.effects_changed?
-          instrument.swap_effects
+        if instrument.effects_changed?(fx)
+          instrument.swap_effects(fx)
         end
         instrument.connect_input_nodes_to_effects
         old_cycles.each(&:dispose)
         instrument.cycles.each(&:start)
+      end
+    end
+
+    def fx(&block)
+      Negasonic::Instrument::EffectsSet.new.tap do |fx_set|
+        fx_set.instance_eval(&block)
       end
     end
   end

@@ -29,16 +29,11 @@ module Negasonic
       @cycles = []
       @input_nodes = []
       @used_input_nodes = 0
-
-      # extractable code
       @effect_nodes = []
-      @effects_set = EffectsSet.new
-      # extractable code
     end
 
     def reload
       @used_input_nodes = 0
-      @effects_set.reload
       @cycles = []
     end
 
@@ -53,14 +48,13 @@ module Negasonic
       end
     end
 
-    # extractable code
-    def effects_changed?
-      @effect_nodes != @effects_set.nodes
+    def effects_changed?(effects_set)
+      @effect_nodes != effects_set.nodes
     end
 
-    def swap_effects
+    def swap_effects(effects_set)
       old_effect_nodes = @effect_nodes
-      new_effect_nodes = @effects_set.nodes
+      new_effect_nodes = effects_set.nodes
 
       @effect_nodes = new_effect_nodes
 
@@ -84,18 +78,10 @@ module Negasonic
         input.connect_to_master
       end
     end
-    # extractable code
 
     #########
     ## DSL ##
     #########
-
-    # extractable code
-    def with_fx(&block)
-      @effects_set.reload
-      @effects_set.instance_eval(&block)
-    end
-    # extractable code
 
     def cycle(&block)
       cycle_input_node =

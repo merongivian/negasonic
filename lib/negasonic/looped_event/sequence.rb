@@ -3,9 +3,11 @@ module Negasonic
     class Sequence
       attr_reader :synth
 
-      def initialize(synth, segments = [])
+      def initialize(synth, segments = [], humanize: false, probability: 1)
         @synth = synth
         @segments = segments
+        @humanize = humanize
+        @probability = probability
       end
 
       def start
@@ -28,7 +30,10 @@ module Negasonic
 
       def do_start(duration, &block)
         @tone_sequence =
-          Tone::Event::Sequence.new(@segments, duration, &block)
+          Tone::Event::Sequence.new(@segments, duration, &block).tap do |sequence|
+            sequence.humanize = @humanize
+            sequence.probability = @probability
+          end
 
         LoopedEvent.start(@tone_sequence)
       end

@@ -83,7 +83,7 @@ module Negasonic
     ## DSL ##
     #########
 
-    def cycle(&block)
+    def cycle(**opts, &block)
       cycle_input_node =
         if @input_nodes[@used_input_nodes]
           @input_nodes[@used_input_nodes]
@@ -93,7 +93,7 @@ module Negasonic
           end
         end
 
-      the_cycle = Negasonic::LoopedEvent::Sequence.new(cycle_input_node)
+      the_cycle = Negasonic::LoopedEvent::Sequence.new(cycle_input_node, **opts)
       the_cycle.instance_eval(&block)
       @used_input_nodes += 1
       @cycles << the_cycle

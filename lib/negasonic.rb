@@ -8,12 +8,20 @@ if RUBY_ENGINE == 'opal'
 
   module Negasonic
     NOTATION = "n"
+    @default_instrument =
+      Instrument.add('default').tap do |instrument|
+        instrument.base_input_node = Instrument::Synth.simple
+      end
 
-    def self.schedule_next_cycle(&block)
-      Tone::Transport.schedule_once(
-        Tone::Transport.next_subdivision("1#{NOTATION}"),
-        &block
-      )
+    class << self
+      attr_reader :default_instrument
+
+      def schedule_next_cycle(&block)
+        Tone::Transport.schedule_once(
+          Tone::Transport.next_subdivision("1#{NOTATION}"),
+          &block
+        )
+      end
     end
   end
 else

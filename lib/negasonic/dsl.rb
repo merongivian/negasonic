@@ -50,5 +50,9 @@ module Negasonic
         fx_set.instance_eval(&block)
       end
     end
+
+    def cycle(**opts, &block)
+      Negasonic.default_instrument.cycle(**opts, &block)
+    end
   end
 end

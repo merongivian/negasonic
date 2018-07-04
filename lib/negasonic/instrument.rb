@@ -40,14 +40,14 @@ module Negasonic
       @name = name
       @cycles = []
       @input_nodes = []
-      @used_input_nodes = 0
+      @used_input_nodes = 1
       @effect_nodes = []
       @used = false
       store_current_cycles
     end
 
     def reload
-      @used_input_nodes = 0
+      @used_input_nodes = 1
       @cycles = []
     end
 
@@ -77,6 +77,8 @@ module Negasonic
       else
         new_base_input_node.dispose
       end
+
+      create_default_cycle
     end
 
     def effects_changed?(effects_set)
@@ -110,6 +112,10 @@ module Negasonic
       end
     end
 
+    def create_default_cycle
+      @cycles << Negasonic::LoopedEvent::Sequence.new(@base_input_node)
+    end
+
     #########
     ## DSL ##
     #########
@@ -124,10 +130,15 @@ module Negasonic
           end
         end
 
-      the_cycle = Negasonic::LoopedEvent::Sequence.new(cycle_input_node, **opts)
-      the_cycle.instance_eval(&block)
-      @used_input_nodes += 1
-      @cycles << the_cycle
+      Negasonic::LoopedEvent::Sequence.new(cycle_input_node, **opts).tap do |the_cycle|
+        the_cycle.instance_eval(&block)
+        @used_input_nodes += 1
+        @cycles << the_cycle
+      end
+    end
+
+    def play(*notes)
+      @cycles[0].play(*notes)
     end
   end
 end

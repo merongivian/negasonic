@@ -22,7 +22,7 @@ module Negasonic
       end
     end
 
-    attr_reader :name, :cycles
+    attr_reader :name, :cycles, :stored_cycles
 
     def initialize(name)
       @name = name
@@ -30,11 +30,24 @@ module Negasonic
       @input_nodes = []
       @used_input_nodes = 0
       @effect_nodes = []
+      store_current_cycles
     end
 
     def reload
       @used_input_nodes = 0
       @cycles = []
+    end
+
+    def store_current_cycles
+      @stored_cycles = @cycles
+    end
+
+    def dispose_stored_cycles
+      @stored_cycles.each(&:dispose)
+    end
+
+    def start_current_cycles
+      @cycles.each(&:start)
     end
 
     def base_input_node=(new_base_input_node)

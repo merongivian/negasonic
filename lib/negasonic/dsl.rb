@@ -25,7 +25,7 @@ module Negasonic
       instrument = Negasonic::Instrument.find(name) ||
                    Negasonic::Instrument.add(name)
 
-      old_cycles = instrument.cycles
+      instrument.store_current_cycles
       instrument.reload
 
       instrument.base_input_node = synth_node
@@ -40,8 +40,8 @@ module Negasonic
           instrument.swap_effects(fx_set)
         end
         instrument.connect_input_nodes_to_effects
-        old_cycles.each(&:dispose)
-        instrument.cycles.each(&:start)
+        instrument.dispose_stored_cycles
+        instrument.start_current_cycles
       end
     end
 

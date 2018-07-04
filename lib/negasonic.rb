@@ -11,6 +11,7 @@ if RUBY_ENGINE == 'opal'
     @default_instrument =
       Instrument.add('default').tap do |instrument|
         instrument.base_input_node = Instrument::Synth.simple
+        instrument.used = true
       end
 
     class << self

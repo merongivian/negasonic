@@ -20,9 +20,21 @@ module Negasonic
           @all << instrument
         end
       end
+
+      def set_all_to_not_used
+        @all.select { |i| i.name != 'default' }
+            .each { |i| i.used = false }
+      end
+
+      def all_not_used
+        @all.select do |i|
+          i.name != 'default' && !i.used
+        end
+      end
     end
 
     attr_reader :name, :cycles, :stored_cycles
+    attr_accessor :used
 
     def initialize(name)
       @name = name
@@ -30,6 +42,7 @@ module Negasonic
       @input_nodes = []
       @used_input_nodes = 0
       @effect_nodes = []
+      @used = false
       store_current_cycles
     end
 
@@ -44,6 +57,11 @@ module Negasonic
 
     def dispose_stored_cycles
       @stored_cycles.each(&:dispose)
+    end
+
+    def kill_current_cycles
+      @cycles.each(&:dispose)
+      @cycles = []
     end
 
     def start_current_cycles

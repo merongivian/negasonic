@@ -24,6 +24,7 @@ module Negasonic
       synth_node = Negasonic::Instrument::Synth.send(synth, { volume: volume })
       instrument = Negasonic::Instrument.find(name) ||
                    Negasonic::Instrument.add(name)
+      instrument.used = true
 
       instrument.store_current_cycles
       instrument.reload

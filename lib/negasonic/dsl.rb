@@ -27,9 +27,10 @@ module Negasonic
       instrument.used = true
 
       instrument.store_current_cycles
-      instrument.reload
 
       instrument.base_input_node = synth_node
+      instrument.reload
+
       instrument.instance_eval(&block) if block_given?
 
       if instrument.effects_changed?(fx_set)
@@ -54,6 +55,10 @@ module Negasonic
 
     def cycle(**opts, &block)
       Negasonic.default_instrument.cycle(**opts, &block)
+    end
+
+    def play(*notes)
+      Negasonic.default_instrument.cycles[0].play(*notes)
     end
   end
 end

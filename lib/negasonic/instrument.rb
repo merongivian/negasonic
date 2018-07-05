@@ -48,7 +48,7 @@ module Negasonic
 
     def reload
       @used_input_nodes = 1
-      @cycles = []
+      @cycles = [create_default_cycle]
     end
 
     def store_current_cycles
@@ -77,8 +77,6 @@ module Negasonic
       else
         new_base_input_node.dispose
       end
-
-      create_default_cycle
     end
 
     def effects_changed?(effects_set)
@@ -113,7 +111,7 @@ module Negasonic
     end
 
     def create_default_cycle
-      @cycles << Negasonic::LoopedEvent::Sequence.new(@base_input_node)
+      Negasonic::LoopedEvent::Sequence.new(@base_input_node)
     end
 
     #########

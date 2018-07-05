@@ -60,5 +60,9 @@ module Negasonic
     def play(*notes)
       Negasonic.default_instrument.cycles[0].play(*notes)
     end
+
+    def scale(tonic_or_name, *opts)
+      Negasonic::NotesGeneration.scale(tonic_or_name, *opts).to_a
+    end
   end
 end

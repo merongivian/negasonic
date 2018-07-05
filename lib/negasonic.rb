@@ -2,6 +2,7 @@ if RUBY_ENGINE == 'opal'
   require 'tone'
   require 'negasonic/instrument'
   require 'negasonic/looped_event'
+  require 'negasonic/notes_generation'
   require 'negasonic/dsl'
 
   extend Negasonic::DSL

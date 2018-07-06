@@ -25,14 +25,11 @@ module Negasonic
       end
 
       def set_all_to_not_used
-        @all.select { |i| i.name != 'default' }
-            .each { |i| i.used = false }
+        @all.each { |i| i.used = false }
       end
 
       def all_not_used
-        @all.select do |i|
-          i.name != 'default' && !i.used
-        end
+        @all.reject(&:used)
       end
     end
 

@@ -1,5 +1,9 @@
+require 'negasonic/notes_generation/dsl'
+
 module Negasonic
   module DSL
+    include Negasonic::NotesGeneration::DSL
+
     def part(instrument:, &block)
       the_instrument = Negasonic::Instrument.find(instrument)
 
@@ -59,10 +63,6 @@ module Negasonic
 
     def play(*notes)
       Negasonic.default_instrument.cycles[0].play(*notes)
-    end
-
-    def scale(tonic_or_name, *opts)
-      Negasonic::NotesGeneration.scale(tonic_or_name, *opts).to_a
     end
   end
 end

@@ -1,7 +1,11 @@
+require 'negasonic/notes_generation/dsl'
+
 module Negasonic
   module LoopedEvent
     class Sequence
       attr_reader :synth
+
+      include Negasonic::NotesGeneration::DSL
 
       def initialize(synth, segments = [], humanize: false, probability: 1)
         @synth = synth
@@ -24,10 +28,6 @@ module Negasonic
 
       def play(notes)
         @segments << LoopedEvent.to_tone_notes(Array(notes))
-      end
-
-      def scale(tonic_or_name, *opts)
-        Negasonic::NotesGeneration.scale(tonic_or_name, *opts).to_a
       end
 
       private

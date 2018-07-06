@@ -1,9 +1,12 @@
 require 'negasonic/instrument/effects_set'
 require 'negasonic/instrument/synth'
+require 'negasonic/notes_generation/dsl'
 require 'negasonic/dsl'
 
 module Negasonic
   class Instrument
+    include Negasonic::NotesGeneration::DSL
+
     @all = []
 
     class << self
@@ -137,10 +140,6 @@ module Negasonic
 
     def play(*notes)
       @cycles[0].play(*notes)
-    end
-
-    def scale(tonic_or_name, *opts)
-      Negasonic::NotesGeneration.scale(tonic_or_name, *opts).to_a
     end
   end
 end

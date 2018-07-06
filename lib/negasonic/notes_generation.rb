@@ -13,6 +13,7 @@
 require 'negasonic/notes_generation/wrapping_array'
 require 'negasonic/notes_generation/note'
 require 'negasonic/notes_generation/scale'
+require 'negasonic/notes_generation/chord'
 
 module Negasonic
   module NotesGeneration
@@ -32,6 +33,51 @@ module Negasonic
         opts = resolve_synth_opts_hash_or_array(opts)
         opts = {:num_octaves => 1}.merge(opts)
         Scale.new(tonic, name,  opts[:num_octaves])
+      end
+
+      def chord(tonic_or_name, *opts)
+        tonic = 0
+        name = :minor
+        if opts.size == 0
+          name = tonic_or_name
+        elsif (opts.size == 1) && opts[0].is_a?(Hash)
+          name = tonic_or_name
+        else
+          tonic = tonic_or_name
+          name = opts.shift
+        end
+
+        return [] unless tonic
+        opts = resolve_synth_opts_hash_or_array(opts)
+        c = []
+        if tonic.is_a?(Array)
+          raise "List passed as parameter to chord needs two elements i.e. (chord [:e3, :minor]), you passed: #{tonic.inspect}" unless tonic.size == 2
+          c = Chord.new(tonic[0], tonic[1], opts[:num_octaves])
+        else
+          c = Chord.new(tonic, name, opts[:num_octaves])
+        end
+        c = chord_invert(c, opts[:invert]) if opts[:invert]
+        return c
+      end
+
+      def chord_invert(notes, shift)
+        raise "Inversion shift value must be a number, got #{shift.inspect}" unless shift.is_a?(Numeric)
+        shift = shift.round
+        raise "Notes must be a list of notes, got #{notes.inspect}" unless notes.is_a?(Array)
+        if(shift > 0)
+          chord_invert(notes.to_a[1..-1] + [notes.to_a[0]+12], shift-1)
+        elsif(shift < 0)
+          chord_invert((notes.to_a[0..-2] + [notes.to_a[-1]-12]).sort, shift+1)
+        else
+          notes
+        end
+      end
+
+      def chord_degree(degree, tonic, scale=:major, number_of_notes=4, *opts)
+        opts = resolve_synth_opts_hash_or_array(opts)
+        opts = {invert: 0}.merge(opts)
+
+        chord_invert(Chord.resolve_degree(degree, tonic, scale, number_of_notes), opts[:invert])
       end
 
       def resolve_synth_opts_hash_or_array(opts)
@@ -69,6 +115,7 @@ module Negasonic
         h = Hash[*left]
         res.merge(h)
       end
+
     end
   end
 end

@@ -26,8 +26,8 @@ module Negasonic
         @tone_sequence && @tone_sequence.dispose
       end
 
-      def play(notes)
-        @segments << LoopedEvent.to_tone_notes(Array(notes))
+      def play(*notes)
+        @segments << LoopedEvent.to_tone_notes(notes.flatten)
       end
 
       private

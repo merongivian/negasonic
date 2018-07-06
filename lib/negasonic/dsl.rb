@@ -1,4 +1,5 @@
 require 'negasonic/notes_generation/dsl'
+require 'negasonic/time'
 
 module Negasonic
   module DSL
@@ -41,7 +42,7 @@ module Negasonic
         fx_set.chain
       end
 
-      Negasonic.schedule_next_cycle do
+      Negasonic::Time.schedule_next_cycle do
         if instrument.effects_changed?(fx_set)
           instrument.swap_effects(fx_set)
         end

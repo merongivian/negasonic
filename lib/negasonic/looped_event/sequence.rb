@@ -1,4 +1,5 @@
 require 'negasonic/notes_generation/dsl'
+require 'negasonic/time'
 
 module Negasonic
   module LoopedEvent
@@ -15,10 +16,8 @@ module Negasonic
       end
 
       def start
-        duration = @segments.count.to_s + Negasonic::NOTATION
-
-        do_start(duration) do |time, note|
-          @synth.trigger_attack_release(note, duration, time)
+        do_start(segment_duration) do |time, note|
+          @synth.trigger_attack_release(note, segment_duration, time)
         end
       end
 
@@ -40,6 +39,11 @@ module Negasonic
           end
 
         LoopedEvent.start(@tone_sequence)
+      end
+
+      def segment_duration
+        Negasonic::Time::Segments.new(@segments)
+                                 .duration
       end
     end
   end

@@ -4,11 +4,11 @@ if RUBY_ENGINE == 'opal'
   require 'negasonic/looped_event'
   require 'negasonic/notes_generation'
   require 'negasonic/dsl'
+  require 'negasonic/time'
 
   extend Negasonic::DSL
 
   module Negasonic
-    NOTATION = "n"
     @default_instrument =
       Instrument.add('default').tap do |instrument|
         instrument.base_input_node = Instrument::Synth.simple
@@ -17,13 +17,6 @@ if RUBY_ENGINE == 'opal'
 
     class << self
       attr_reader :default_instrument
-
-      def schedule_next_cycle(&block)
-        Tone::Transport.schedule_once(
-          Tone::Transport.next_subdivision("1#{NOTATION}"),
-          &block
-        )
-      end
     end
   end
 else

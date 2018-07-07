@@ -67,5 +67,13 @@ module Negasonic
       Negasonic.default_instrument.used = true
       Negasonic.default_instrument.cycles[0].play(*notes)
     end
+
+    def bpm(value)
+      Tone::Transport.bpm = value
+    end
+
+    def bpm_ramp_to(value, seconds)
+      Tone::Transport.bpm_ramp_to(value, seconds)
+    end
   end
 end

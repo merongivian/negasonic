@@ -1,7 +1,8 @@
 module Negasonic
   module Time
-    CYCLE_DURATION = 1200
+    CYCLE_DURATION = 8609
     NOTATION = 'i'
+    BMP = 100
 
     def self.schedule_next_cycle(&block)
       Tone::Transport.schedule_once(

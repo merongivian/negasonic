@@ -11,12 +11,13 @@ module Negasonic
     end
 
     class Segments
-      def initialize(segments)
+      def initialize(segments, number_of_cycles)
         @segments = segments
+        @number_of_cycles = number_of_cycles
       end
 
       def duration
-        `Math.round(#{CYCLE_DURATION}/#{@segments.count}).toString()` + NOTATION
+        `Math.round(#{CYCLE_DURATION * @number_of_cycles}/#{@segments.count}).toString()` + NOTATION
       end
     end
   end

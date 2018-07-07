@@ -8,11 +8,12 @@ module Negasonic
 
       include Negasonic::NotesGeneration::DSL
 
-      def initialize(synth, segments = [], humanize: false, probability: 1)
+      def initialize(synth, segments = [], humanize: false, probability: 1, duration: 1)
         @synth = synth
         @segments = segments
         @humanize = humanize
         @probability = probability
+        @number_of_cycles = duration
       end
 
       def start
@@ -41,8 +42,8 @@ module Negasonic
         LoopedEvent.start(@tone_sequence)
       end
 
-      def segment_duration
-        Negasonic::Time::Segments.new(@segments)
+      def segment_duration(number_of_cycles)
+        Negasonic::Time::Segments.new(@segments, @number_of_cycles)
                                  .duration
       end
     end

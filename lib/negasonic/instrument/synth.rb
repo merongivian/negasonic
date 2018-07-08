@@ -26,6 +26,10 @@ module Negasonic
           Tone::Synth::Mono.new(**opts)
         end
 
+        def metal(**opts)
+          Tone::Synth::Metal.new(**opts)
+        end
+
         def pluck(**opts)
           Tone::Synth::Pluck.new(**opts)
         end

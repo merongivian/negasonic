@@ -42,7 +42,7 @@ module Negasonic
         LoopedEvent.start(@tone_sequence)
       end
 
-      def segment_duration(number_of_cycles)
+      def segment_duration
         Negasonic::Time::Segments.new(@segments, @number_of_cycles)
                                  .duration
       end

@@ -2,7 +2,93 @@
 
 Ruby DSL for music live coding in the browser, you can play with it in the [online editor](https://negasonic.herokuapp.com/)
 
-DISCLAIMER: The current DSL might change in the future
+**DISCLAIMER:** This is pretty alpha. There are timing issues that can make things unstable, so use with care if you plan to
+use it for real performances... otherwise have fun!
+## Usage
+
+### Playing Notes
+
+You can use plain normal or midi notes
+
+``` ruby
+# playing a single note
+play 42
+
+# multiple notes
+play 'E3', 42
+
+# produces the same result as the above
+play 'E3'
+play 42
+
+# Scales and chords (same as Soni-pi)
+play (scale :c, :major)
+play (chord :d, :minor)
+```
+
+### Cycle
+
+Under the hood we use a 'fixed' time for calculating notes durations, adding more notes will make durations
+shorter. This happens because each `play` happens inside a `cycle`. A `cycle`'s duration is around
+3 seconds
+
+```ruby
+# doing this
+play 'E3'
+play 42
+
+# is the same as this
+cycle do
+  play 'E3'
+  play 42
+end
+```
+
+if you want to play notes at the same time then use multiple cycles
+
+```ruby
+cycle do
+  play 'E3'
+end
+
+cycle do
+  play 42
+end
+```
+
+### Custom Instruments
+
+With `with_instrument` you can add a synth and connect it with effects. Every instrument needs
+to have a name (for perfomance reasons)
+
+```ruby
+
+# The order of the effects will affect the final sound
+with_instrument(:drums, synth: :membrane, fx: [:bit_crusher, :distortion]) do
+  # each instrument has its own cycle by default
+  play 30
+  play 64
+end
+
+# multiple cycles can be used here as well
+with_instrument(:lead, synth: :am, fx: :freeverb, volume: 3) do
+  cycle do
+    play (scale :c, :major)
+  end
+
+  cycle do
+    play (scale :c, :pelog)
+  end
+end
+```
+
+### Cycle options
+
+- `:duration` expands the cycle. accepts integer values
+- `:probability` float value
+- `:humanize` boolean value
+
+## Examples
 
 ## Installation
 
@@ -19,31 +105,6 @@ And then execute:
 Or install it yourself as:
 
     $ gem install negasonic
-
-## Usage
-
-Most of the audio capabilities are handled by [Tone.rb](https://github.com/merongivian/tone.rb), which is a wrapper
-over [Tone.js](https://github.com/Tonejs/Tone.js), you can check how effects/synths works in the [official docs](https://tonejs.github.io/docs/)
-
-`instrument` is in charged of hooking up a synth with a chain of effects
-
-```ruby
-# instruments need to be named in order to use it later
-instrument(:lead, synth: :am, volume: 1) do
-  # The order of the effects will affect the final sound
-  vibrato frequency: 5, depth: 0.1
-  jc_reverb room_size: 0.5
-end
-```
-
-In `pattern` we define which notes will be played in the instrument. The interval value uses
-Tone.js's time notation, [read about time notation](https://github.com/Tonejs/Tone.js/wiki/Time)
-
-```ruby
-pattern(instrument: :lead, interval: '4n', type: :random, notes: [36, "D2", 40, "A2"])
-```
-
-Notes can be plain normal or MIDI notes
 
 ## Contributing
 

@@ -1,14 +1,30 @@
 module Negasonic
   module Time
-    CYCLE_DURATION = 8609
+    CYCLE_DURATION = 8616
     NOTATION = 'i'
-    BMP = 100
+    @just_started = true
 
-    def self.schedule_next_cycle(&block)
-      Tone::Transport.schedule_once(
-        Tone::Transport.next_subdivision("#{CYCLE_DURATION}#{NOTATION}"),
-        &block
-      )
+    class << self
+      attr_accessor :just_started
+
+      def schedule_next_cycle(&block)
+        if @just_started
+          block.call
+        else
+          Tone::Transport.schedule_once(
+            Tone::Transport.next_subdivision("#{CYCLE_DURATION}#{NOTATION}"),
+            &block
+          )
+        end
+      end
+
+      def pause
+        if Tone::Transport.started?
+          Tone::Transport.stop
+
+          @just_started = true
+        end
+      end
     end
 
     class Segments

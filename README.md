@@ -89,22 +89,6 @@ end
 
 ## Examples
 
-## Installation
-
-Add this line to your application's Gemfile:
-
-```ruby
-gem 'negasonic'
-```
-
-And then execute:
-
-    $ bundle install
-
-Or install it yourself as:
-
-    $ gem install negasonic
-
 ## Contributing
 
 Bug reports and pull requests are welcome on GitHub at https://github.com/merongivian/negasonic.

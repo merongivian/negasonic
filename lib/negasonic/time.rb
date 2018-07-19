@@ -2,6 +2,9 @@ module Negasonic
   module Time
     CYCLE_DURATION = 1200
     NOTATION = 'i'
+    # HACK: theres some delay each time the next cycle is played, causing the first note
+    # to be missed by tone js
+    ERROR_MARGIN = 15
     @just_started = true
 
     class << self
@@ -12,7 +15,7 @@ module Negasonic
           block.call
         else
           Tone::Transport.schedule_once(
-            `((Tone.Transport.nextCycleNumber) * #{CYCLE_DURATION}) + #{NOTATION}`,
+            `((Tone.Transport.nextCycleNumber) * #{CYCLE_DURATION}) - #{ERROR_MARGIN} + #{NOTATION}`,
             &block
           )
         end

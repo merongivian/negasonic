@@ -83,8 +83,8 @@ end
 
 ### Cycle options
 
-- `:duration` expands the cycle. accepts integer values
-- `:probability` float value
+- `:expand` for a longer duration. accepts integer values
+- `:probability` float value between 0 and 1
 - `:humanize` boolean value
 
 ## Examples

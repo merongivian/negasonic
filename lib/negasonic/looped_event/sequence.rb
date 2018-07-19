@@ -8,12 +8,12 @@ module Negasonic
 
       include Negasonic::NotesGeneration::DSL
 
-      def initialize(synth, segments = [], humanize: false, probability: 1, duration: 1)
+      def initialize(synth, segments = [], humanize: false, probability: 1, expand: 1)
         @synth = synth
         @segments = segments
         @humanize = humanize
         @probability = probability
-        @number_of_cycles = duration
+        @number_of_cycles = expand
       end
 
       def start

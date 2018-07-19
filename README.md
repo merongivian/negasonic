@@ -2,8 +2,8 @@
 
 Ruby DSL for music live coding in the browser, you can play with it in the [online editor](https://negasonic.herokuapp.com/)
 
-**DISCLAIMER:** This is pretty alpha. There are timing issues that can make things unstable, so use with care if you plan to
-use it for real performances... otherwise have fun!
+**DISCLAIMER:** This is pretty alpha, so use with care if you plan to use it for real performances... otherwise have fun!
+
 ## Usage
 
 ### Playing Notes
@@ -28,9 +28,8 @@ play (chord :d, :minor)
 
 ### Cycle
 
-Under the hood we use a 'fixed' time for calculating notes durations, adding more notes will make durations
-shorter. This happens because each `play` happens inside a `cycle`. A `cycle`'s duration is around
-3 seconds
+Under the hood we use a 'fixed' time for calculating notes durations, adding more notes or `play` statements will make durations
+shorter. This happens because each `play` happens inside a `cycle`. A `cycle`'s duration is around 3 seconds
 
 ```ruby
 # doing this
@@ -58,8 +57,8 @@ end
 
 ### Custom Instruments
 
-With `with_instrument` you can add a synth and connect it with effects. Every instrument needs
-to have a name (for perfomance reasons)
+With `with_instrument` you can add a synthesizer and connect it with effects. Every instrument needs
+to have a name (for performance reasons)
 
 ```ruby
 

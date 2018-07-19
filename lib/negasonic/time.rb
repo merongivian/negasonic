@@ -1,25 +1,37 @@
 module Negasonic
   module Time
-    CYCLE_DURATION = 8616
+    CYCLE_DURATION = 1200
     NOTATION = 'i'
     @just_started = true
 
     class << self
-      attr_accessor :just_started
+      attr_accessor :just_started, :next_cycle_number
 
       def schedule_next_cycle(&block)
         if @just_started
           block.call
         else
           Tone::Transport.schedule_once(
-            Tone::Transport.next_subdivision("#{CYCLE_DURATION}#{NOTATION}"),
+            `((Tone.Transport.nextCycleNumber) * #{CYCLE_DURATION}) + #{NOTATION}`,
             &block
           )
         end
       end
 
-      def pause
+      def set_next_cycle_number_acummulator
+        duration = "#{CYCLE_DURATION}#{NOTATION}"
+
+        %x{
+          Tone.Transport.nextCycleNumber = 0
+          Tone.Transport.scheduleRepeat(function(){
+            Tone.Transport.nextCycleNumber += 1;
+          }, duration)
+        }
+      end
+
+      def stop
         if Tone::Transport.started?
+          Tone::Transport.cancel
           Tone::Transport.stop
 
           @just_started = true

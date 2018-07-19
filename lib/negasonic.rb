@@ -19,12 +19,6 @@ if RUBY_ENGINE == 'opal'
       attr_reader :default_instrument
     end
   end
-
-  ############
-  # DEFAULTS #
-  ############
-
-  bpm(800)
 else
   require 'opal'
 

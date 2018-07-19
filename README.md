@@ -87,6 +87,35 @@ end
 - `:probability` play or miss a note randomly. Float value between 0 and 1
 - `:humanize` boolean value
 
+### Synths
+
+- `:membrane` Use it as drums
+- `:simple`
+- `:am`
+- `:fm`
+- `:duo`
+- `:mono`
+- `:metal`
+- `:pluck`
+- `:poly`
+
+### Effects
+
+- `:vibrato`
+- `:distortion`
+- `:distortion`
+- `:chorus`
+- `:tremolo`
+- `:feedback_delay`
+- `:freeverb`
+- `:jc_reverb`
+- `:phaser`
+- `:ping_pong_delay`
+- `:auto_wah`
+- `:bit_crusher`
+- `:chebyshev`
+- `:pitch_shift`
+
 ## Examples
 
 ## Contributing

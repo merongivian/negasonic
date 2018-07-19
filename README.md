@@ -2,7 +2,7 @@
 
 Ruby DSL for music live coding in the browser, you can play with it in the [online editor](https://negasonic.herokuapp.com/)
 
-**DISCLAIMER:** This is pretty alpha, so use with care if you plan to use it for real performances... otherwise have fun!
+**DISCLAIMER:** This is pretty alpha, so use with care if you plan to use it for real performances... Otherwise have fun!
 
 ## Usage
 
@@ -43,7 +43,7 @@ cycle do
 end
 ```
 
-if you want to play notes at the same time then use multiple cycles
+If you want to play notes at the same time then use multiple cycles
 
 ```ruby
 cycle do
@@ -83,8 +83,8 @@ end
 
 ### Cycle options
 
-- `:expand` for a longer duration. accepts integer values
-- `:probability` float value between 0 and 1
+- `:expand` for a longer duration. Integer value
+- `:probability` play or miss a note randomly. Float value between 0 and 1
 - `:humanize` boolean value
 
 ## Examples

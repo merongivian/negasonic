@@ -21,7 +21,7 @@ play 'E3', 42
 play 'E3'
 play 42
 
-# Scales and chords (same as Soni-pi)
+# Scales and chords (same as Sonic-pi)
 play (scale :c, :major)
 play (chord :d, :minor)
 ```

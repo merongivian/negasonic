@@ -81,6 +81,25 @@ with_instrument(:lead, synth: :am, fx: :freeverb, volume: 3) do
 end
 ```
 
+### Custom Effects
+
+It is possible to modify the default values for effects, you can do this trough the `fx` block. Options
+for each effect are detailed in the [Effects section](https://github.com/merongivian/negasonic/tree/new-dsl#effects).
+
+```ruby
+drum_effects = fx do
+  bit_crusher bits: 3
+  distortion value: 1.3
+end
+
+with_instrument(:drums, synth: :membrane, fx: drum_effects) do
+  4.times do
+    play 30
+    play 64
+  end
+end
+```
+
 ### Cycle options
 
 - `:expand` for a longer duration. Integer value
@@ -101,20 +120,21 @@ end
 
 ### Effects
 
-- `:vibrato`
-- `:distortion`
-- `:distortion`
-- `:chorus`
-- `:tremolo`
-- `:feedback_delay`
-- `:freeverb`
-- `:jc_reverb`
-- `:phaser`
-- `:ping_pong_delay`
-- `:auto_wah`
-- `:bit_crusher`
-- `:chebyshev`
-- `:pitch_shift`
+| Effects         | Options                                            |
+| --------------- | -------------------------------------------------- |
+| vibrato         | `:frequency`, `:depth`                             |
+| distortion      | `:value`                                           |
+| chorus          | `:frequency`, `:delay_time`, `:depth`              |
+| tremolo         | `:frequency`, `:depth`                             |
+| feedback_delay  | `:delay_time`, `:feedback`                         |
+| freeverb        | `:room_size`, `:dampening`                         |
+| jc_reverb       | `:room_size`                                       |
+| phaser          | `:frequency`, `:octaves`, `:base_frequency`        |
+| ping_pong_delay | `:delay_time`, `:feedback`                         |
+| auto_wah        | `:base_frequency`, `:octave`, `:sensitivity`, `:q` |
+| bit_crusher     | `:bits`                                            |
+| chebyshev       | `:order`                                           |
+| pitch_shift     | `:pitch`                                           |
 
 ## Examples
 

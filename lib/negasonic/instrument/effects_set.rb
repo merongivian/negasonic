@@ -3,12 +3,33 @@ module Negasonic
     class EffectsSet
       attr_reader :nodes
 
+      def self.create_from_array(nodes_names)
+        new.tap do |effects_set|
+          nodes_names.each do |node_name|
+            effects_set.send(node_name)
+          end
+        end
+      end
+
       def initialize
         @nodes = []
       end
 
       def reload
         @nodes = []
+      end
+
+      def chain
+        return if nodes.empty?
+
+        last_node_connected, *rest_of_nodes = @nodes
+
+        rest_of_nodes.each do |node|
+          last_node_connected.connect(node.to_n)
+          last_node_connected = node
+        end
+
+        last_node_connected.to_master
       end
 
       def vibrato(**opts)

@@ -48,7 +48,11 @@ module Negasonic
       end
 
       def duration
-        `Math.round(#{CYCLE_DURATION * @number_of_cycles}/#{@segments.count}).toString()` + NOTATION
+        duration_number.JS.toString + NOTATION
+      end
+
+      def duration_number
+        `Math.round(#{CYCLE_DURATION * @number_of_cycles}/#{@segments.count})`
       end
     end
   end

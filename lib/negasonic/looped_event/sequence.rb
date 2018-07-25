@@ -8,18 +8,22 @@ module Negasonic
 
       include Negasonic::NotesGeneration::DSL
 
-      def initialize(synth, segments = [], humanize: false, probability: 1, expand: 1, every: 1)
+      def initialize(synth, segments = [], humanize: false, probability: 1, expand: 1, every: 1, sustain: 0.15)
         @synth = synth
         @segments = segments
         @humanize = humanize
         @probability = probability
         @number_of_cycles = expand
         @every = every
+        @sustain = sustain
       end
 
       def start
-        do_start(segment_duration) do |time, note|
-          @synth.trigger_attack_release(note, segment_duration, time)
+        sustain =
+          `Math.round(#{segment_calculator.duration_number}*#{@sustain}).toString()` + Negasonic::Time::NOTATION
+
+        do_start(segment_calculator.duration) do |time, note|
+          @synth.trigger_attack_release(note, sustain, time)
         end
 
         set_pause_by_every
@@ -57,9 +61,8 @@ module Negasonic
         LoopedEvent.start(@tone_sequence)
       end
 
-      def segment_duration
+      def segment_calculator
         Negasonic::Time::Segments.new(@segments, @number_of_cycles)
-                                 .duration
       end
     end
   end

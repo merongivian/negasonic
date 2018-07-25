@@ -2,6 +2,7 @@ module Negasonic
   module Time
     CYCLE_DURATION = 1200
     NOTATION = 'i'
+    CYCLE_DURATION_IN_NOTATION = "#{CYCLE_DURATION}#{NOTATION}"
     # HACK: theres some delay each time the next cycle is played, causing the first note
     # to be missed by tone js
     ERROR_MARGIN = 15
@@ -22,13 +23,11 @@ module Negasonic
       end
 
       def set_next_cycle_number_acummulator
-        duration = "#{CYCLE_DURATION}#{NOTATION}"
-
         %x{
           Tone.Transport.nextCycleNumber = 0
           Tone.Transport.scheduleRepeat(function(){
             Tone.Transport.nextCycleNumber += 1;
-          }, duration)
+          }, #{CYCLE_DURATION_IN_NOTATION})
         }
       end
 

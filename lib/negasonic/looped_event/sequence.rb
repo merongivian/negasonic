@@ -8,18 +8,21 @@ module Negasonic
 
       include Negasonic::NotesGeneration::DSL
 
-      def initialize(synth, segments = [], humanize: false, probability: 1, expand: 1)
+      def initialize(synth, segments = [], humanize: false, probability: 1, expand: 1, every: 1)
         @synth = synth
         @segments = segments
         @humanize = humanize
         @probability = probability
         @number_of_cycles = expand
+        @every = every
       end
 
       def start
         do_start(segment_duration) do |time, note|
           @synth.trigger_attack_release(note, segment_duration, time)
         end
+
+        set_pause_by_every
       end
 
       def dispose
@@ -31,6 +34,18 @@ module Negasonic
       end
 
       private
+
+      def set_pause_by_every
+        %x{
+          Tone.Transport.scheduleRepeat(function(){
+            if (Tone.Transport.nextCycleNumber % #@every == 0) {
+              #{@tone_sequence.mute = false}
+            } else {
+              #{@tone_sequence.mute = true}
+            }
+          }, #{Negasonic::Time::CYCLE_DURATION_IN_NOTATION})
+        }
+      end
 
       def do_start(duration, &block)
         @tone_sequence =

@@ -22,7 +22,7 @@ module Negasonic
 
       def start
         sustain =
-          `Math.round(#{segment_calculator.duration_number}*#{@sustain}).toString()` + Negasonic::Time::NOTATION
+          `Math.round(#{segment_calculator.duration_number} * #@number_of_cycles * #@sustain).toString()` + Negasonic::Time::NOTATION
 
         init_sequence(segment_calculator.duration) do |time, note|
           @synth.trigger_attack_release(note, sustain, time)

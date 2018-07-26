@@ -9,6 +9,8 @@ module Negasonic
       include Negasonic::NotesGeneration::DSL
 
       def initialize(synth, segments = [], humanize: false, probability: 1, expand: 1, every: 1, sustain: 0.15)
+        raise 'using every while expanding the cycle is disabled for now' if expand > 1 && every > 1
+
         @synth = synth
         @segments = segments
         @humanize = humanize

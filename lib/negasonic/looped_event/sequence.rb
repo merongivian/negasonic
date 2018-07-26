@@ -22,11 +22,12 @@ module Negasonic
         sustain =
           `Math.round(#{segment_calculator.duration_number}*#{@sustain}).toString()` + Negasonic::Time::NOTATION
 
-        do_start(segment_calculator.duration) do |time, note|
+        init_sequence(segment_calculator.duration) do |time, note|
           @synth.trigger_attack_release(note, sustain, time)
         end
 
         set_pause_by_every
+        LoopedEvent.start(@tone_sequence)
       end
 
       def dispose
@@ -51,14 +52,11 @@ module Negasonic
         }
       end
 
-      def do_start(duration, &block)
-        @tone_sequence =
-          Tone::Event::Sequence.new(@segments, duration, &block).tap do |sequence|
-            sequence.humanize = @humanize
-            sequence.probability = @probability
-          end
-
-        LoopedEvent.start(@tone_sequence)
+      def init_sequence(duration, &block)
+        @tone_sequence = Tone::Event::Sequence.new(@segments, duration, &block).tap do |sequence|
+          sequence.humanize = @humanize
+          sequence.probability = @probability
+        end
       end
 
       def segment_calculator

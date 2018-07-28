@@ -45,7 +45,7 @@ module Negasonic
 
       def set_pause_by_every
         @every_event_id = Tone::Transport.schedule_repeat(Negasonic::Time::CYCLE_DURATION_IN_NOTATION) do
-          if `Tone.Transport.nextCycleNumber % #@every` == 0
+          if `Tone.Transport.currentCycleNumber % #@every` == 0
             @tone_sequence.mute = false
           else
             @tone_sequence.mute = true

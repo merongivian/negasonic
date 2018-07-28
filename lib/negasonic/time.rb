@@ -16,7 +16,7 @@ module Negasonic
           block.call
         else
           Tone::Transport.schedule_once(
-            `((Tone.Transport.nextCycleNumber) * #{CYCLE_DURATION}) - #{ERROR_MARGIN} + #{NOTATION}`,
+            `((Tone.Transport.currentCycleNumber) * #{CYCLE_DURATION}) - #{ERROR_MARGIN} + #{NOTATION}`,
             &block
           )
         end
@@ -24,9 +24,9 @@ module Negasonic
 
       def set_next_cycle_number_acummulator
         %x{
-          Tone.Transport.nextCycleNumber = 0
+          Tone.Transport.currentCycleNumber = 0
           Tone.Transport.scheduleRepeat(function(){
-            Tone.Transport.nextCycleNumber += 1;
+            Tone.Transport.currentCycleNumber += 1;
           }, #{CYCLE_DURATION_IN_NOTATION})
         }
       end

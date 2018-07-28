@@ -7,28 +7,26 @@ module Negasonic
     # to be missed by tone js
     ERROR_MARGIN = 15
     @just_started = true
+    @current_cycle_number = 0
 
     class << self
-      attr_accessor :just_started, :next_cycle_number
+      attr_accessor :just_started, :current_cycle_number
 
       def schedule_next_cycle(&block)
         if @just_started
           block.call
         else
           Tone::Transport.schedule_once(
-            `((Tone.Transport.currentCycleNumber) * #{CYCLE_DURATION}) - #{ERROR_MARGIN} + #{NOTATION}`,
+            (@current_cycle_number * CYCLE_DURATION - ERROR_MARGIN).to_s + NOTATION,
             &block
           )
         end
       end
 
       def set_next_cycle_number_acummulator
-        %x{
-          Tone.Transport.currentCycleNumber = 0
-          Tone.Transport.scheduleRepeat(function(){
-            Tone.Transport.currentCycleNumber += 1;
-          }, #{CYCLE_DURATION_IN_NOTATION})
-        }
+        Tone::Transport.schedule_repeat(CYCLE_DURATION_IN_NOTATION) do
+          Negasonic::Time.current_cycle_number += 1
+        end
       end
 
       def stop

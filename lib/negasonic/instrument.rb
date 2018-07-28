@@ -55,17 +55,9 @@ module Negasonic
       @stored_cycles = @cycles
     end
 
-    def dispose_stored_cycles
-      @stored_cycles.each(&:dispose)
-    end
-
     def kill_current_cycles
       @cycles.each(&:dispose)
       @cycles = []
-    end
-
-    def start_current_cycles
-      @cycles.each(&:start)
     end
 
     def base_input_node=(new_base_input_node)

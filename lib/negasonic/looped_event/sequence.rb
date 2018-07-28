@@ -33,7 +33,8 @@ module Negasonic
       end
 
       def dispose
-        @tone_sequence && cancel_pause_by_every && @tone_sequence.dispose
+        cancel_pause_by_every
+        @tone_sequence && @tone_sequence.dispose
       end
 
       def play(*notes)
@@ -43,19 +44,17 @@ module Negasonic
       private
 
       def set_pause_by_every
-        @every_event_id = %x{
-          Tone.Transport.scheduleRepeat(function(){
-            if (Tone.Transport.nextCycleNumber % #@every == 0) {
-              #{@tone_sequence.mute = false}
-            } else {
-              #{@tone_sequence.mute = true}
-            }
-          }, #{Negasonic::Time::CYCLE_DURATION_IN_NOTATION})
-        }
+        @every_event_id = Tone::Transport.schedule_repeat(Negasonic::Time::CYCLE_DURATION_IN_NOTATION) do
+          if `Tone.Transport.nextCycleNumber % #@every` == 0
+            @tone_sequence.mute = false
+          else
+            @tone_sequence.mute = true
+          end
+        end
       end
 
       def cancel_pause_by_every
-        `Tone.Transport.clear(#@every_event_id)`
+        @every_event_id && Tone::Transport.clear(@every_event_id)
       end
 
       def init_sequence(duration, &block)

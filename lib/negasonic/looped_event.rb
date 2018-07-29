@@ -7,7 +7,7 @@ module Negasonic
   module LoopedEvent
     class << self
       def start(looped_element)
-        looped_element.start(0)
+        looped_element.start('+15i')
         looped_element.loop = true
       end
 

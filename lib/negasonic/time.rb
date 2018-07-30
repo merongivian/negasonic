@@ -21,6 +21,8 @@ module Negasonic
       end
 
       def set_cycle_number_acummulator
+        Negasonic::Time.current_cycle_number = 0
+
         Tone::Transport.schedule_repeat(CYCLE_DURATION_IN_NOTATION) do
           Negasonic::Time.current_cycle_number += 1
         end

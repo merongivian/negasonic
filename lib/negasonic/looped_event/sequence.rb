@@ -48,10 +48,11 @@ module Negasonic
       private
 
       def schedule_next(&block)
+        return if @segments.empty?
+
         if Negasonic::Time.just_started
           block.call
         else
-          puts "schedule next cycle runned"
           cycle_number = if @number_of_cycles > 1
                            (Negasonic::Time.current_cycle_number..(Negasonic::Time.current_cycle_number + @number_of_cycles)).find do |cycle_number|
                              cycle_number % @number_of_cycles == 0

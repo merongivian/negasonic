@@ -42,20 +42,14 @@ module Negasonic
         fx_set.chain
       end
 
-      stored_cycles = instrument.stored_cycles
-      new_cycles = instrument.cycles
+      instrument.stored_cycles.each(&:dispose)
+      instrument.cycles.each(&:start)
 
       Negasonic::Time.schedule_next_cycle do
         if instrument.effects_changed?(fx_set)
           instrument.swap_effects(fx_set)
         end
         instrument.connect_input_nodes_to_effects
-
-        #NOTE: reference just the cycles and process them
-        #, doing it from the instrument causes bugs when executing
-        #multiple times
-        stored_cycles.each(&:dispose)
-        new_cycles.each(&:start)
       end
     end
 

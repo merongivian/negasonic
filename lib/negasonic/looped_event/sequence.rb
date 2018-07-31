@@ -21,20 +21,24 @@ module Negasonic
       end
 
       def start
-        sustain =
-          `Math.round(#{segment_calculator.duration_number} * #@number_of_cycles * #@sustain).toString()` + Negasonic::Time::NOTATION
+        schedule_next do
+          sustain =
+            `Math.round(#{segment_calculator.duration_number} * #@number_of_cycles * #@sustain).toString()` + Negasonic::Time::NOTATION
 
-        init_sequence(segment_calculator.duration) do |time, note|
-          @synth.trigger_attack_release(note, sustain, time)
+          init_sequence(segment_calculator.duration) do |time, note|
+            @synth.trigger_attack_release(note, sustain, time)
+          end
+
+          set_pause_by_every
+          LoopedEvent.start(@tone_sequence)
         end
-
-        set_pause_by_every
-        LoopedEvent.start(@tone_sequence)
       end
 
       def dispose
-        cancel_pause_by_every
-        @tone_sequence && @tone_sequence.dispose
+        schedule_next do
+          cancel_pause_by_every
+          @tone_sequence && @tone_sequence.dispose
+        end
       end
 
       def play(*notes)
@@ -42,6 +46,26 @@ module Negasonic
       end
 
       private
+
+      def schedule_next(&block)
+        if Negasonic::Time.just_started
+          block.call
+        else
+          puts "schedule next cycle runned"
+          cycle_number = if @number_of_cycles > 1
+                           (Negasonic::Time.current_cycle_number..(Negasonic::Time.current_cycle_number + @number_of_cycles)).find do |cycle_number|
+                             cycle_number % @number_of_cycles == 0
+                           end
+                         else
+                           Negasonic::Time.current_cycle_number
+                         end
+
+          Tone::Transport.schedule_once(
+            (cycle_number * Negasonic::Time::CYCLE_DURATION).to_s + Negasonic::Time::NOTATION,
+            &block
+          )
+        end
+      end
 
       def set_pause_by_every
         @every_event_id = Tone::Transport.schedule_repeat(Negasonic::Time::CYCLE_DURATION_IN_NOTATION) do

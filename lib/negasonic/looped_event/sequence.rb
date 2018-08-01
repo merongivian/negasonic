@@ -53,7 +53,7 @@ module Negasonic
         if Negasonic::Time.just_started
           block.call
         else
-          cycle_number = if @number_of_cycles > 1
+          next_cycle_number = if @number_of_cycles > 1
                            (Negasonic::Time.current_cycle_number..(Negasonic::Time.current_cycle_number + @number_of_cycles)).find do |cycle_number|
                              cycle_number % @number_of_cycles == 0
                            end
@@ -62,7 +62,7 @@ module Negasonic
                          end
 
           Tone::Transport.schedule_once(
-            (cycle_number * Negasonic::Time::CYCLE_DURATION).to_s + Negasonic::Time::NOTATION,
+            (next_cycle_number * Negasonic::Time::CYCLE_DURATION).to_s + Negasonic::Time::NOTATION,
             &block
           )
         end

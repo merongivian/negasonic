@@ -4,27 +4,27 @@ module Negasonic
     NOTATION = 'i'
     CYCLE_DURATION_IN_NOTATION = "#{CYCLE_DURATION}#{NOTATION}"
     @just_started = true
-    @current_cycle_number = 0
+    @next_cycle_number = 0
 
     class << self
-      attr_accessor :just_started, :current_cycle_number
+      attr_accessor :just_started, :next_cycle_number
 
       def schedule_next_cycle(&block)
         if @just_started
           block.call
         else
           Tone::Transport.schedule_once(
-            (@current_cycle_number * CYCLE_DURATION).to_s + NOTATION,
+            (@next_cycle_number * CYCLE_DURATION).to_s + NOTATION,
             &block
           )
         end
       end
 
       def set_cycle_number_acummulator
-        Negasonic::Time.current_cycle_number = 0
+        Negasonic::Time.next_cycle_number = 0
 
         Tone::Transport.schedule_repeat(CYCLE_DURATION_IN_NOTATION) do
-          Negasonic::Time.current_cycle_number += 1
+          Negasonic::Time.next_cycle_number += 1
         end
       end
 

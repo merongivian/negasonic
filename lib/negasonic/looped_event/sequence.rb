@@ -54,11 +54,11 @@ module Negasonic
           block.call
         else
           next_cycle_number = if @number_of_cycles > 1
-                           (Negasonic::Time.current_cycle_number..(Negasonic::Time.current_cycle_number + @number_of_cycles)).find do |cycle_number|
+                           (Negasonic::Time.next_cycle_number..(Negasonic::Time.next_cycle_number + @number_of_cycles)).find do |cycle_number|
                              cycle_number % @number_of_cycles == 0
                            end
                          else
-                           Negasonic::Time.current_cycle_number
+                           Negasonic::Time.next_cycle_number
                          end
 
           Tone::Transport.schedule_once(
@@ -70,7 +70,7 @@ module Negasonic
 
       def set_pause_by_every
         @every_event_id = Tone::Transport.schedule_repeat(Negasonic::Time::CYCLE_DURATION_IN_NOTATION) do
-          if Negasonic::Time.current_cycle_number % @every == 0
+          if Negasonic::Time.next_cycle_number % @every == 0
             @tone_sequence.mute = false
           else
             @tone_sequence.mute = true

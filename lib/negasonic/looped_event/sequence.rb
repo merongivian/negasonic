@@ -9,8 +9,6 @@ module Negasonic
       include Negasonic::NotesGeneration::DSL
 
       def initialize(synth, segments = [], humanize: false, probability: 1, expand: 1, every: 1, sustain: 0.15)
-        raise 'using every while expanding the cycle is disabled for now' if expand > 1 && every > 1
-
         @synth = synth
         @segments = segments
         @humanize = humanize
@@ -53,14 +51,6 @@ module Negasonic
         if Negasonic::Time.just_started
           block.call
         else
-          next_cycle_number = if @number_of_cycles > 1
-                           (Negasonic::Time.next_cycle_number..(Negasonic::Time.next_cycle_number + @number_of_cycles)).find do |cycle_number|
-                             cycle_number % @number_of_cycles == 0
-                           end
-                         else
-                           Negasonic::Time.next_cycle_number
-                         end
-
           Tone::Transport.schedule_once(
             (next_cycle_number * Negasonic::Time::CYCLE_DURATION).to_s + Negasonic::Time::NOTATION,
             &block
@@ -69,13 +59,31 @@ module Negasonic
       end
 
       def set_pause_by_every
-        @every_event_id = Tone::Transport.schedule_repeat(Negasonic::Time::CYCLE_DURATION_IN_NOTATION) do
-          if Negasonic::Time.next_cycle_number % @every == 0
+        duration = (Negasonic::Time::CYCLE_DURATION * @number_of_cycles).to_s +
+          Negasonic::Time::NOTATION
+
+        @every_event_id = Tone::Transport.schedule_repeat(duration) do
+
+          #if @number_of_cycles > 1
+            #puts "number of expanded cycle : #{next_cycle_number / @number_of_cycles}"
+          #end
+
+          if (next_cycle_number / @number_of_cycles) % @every  == 0
             @tone_sequence.mute = false
           else
             @tone_sequence.mute = true
           end
         end
+
+        #%x{
+          #Tone.Transport.scheduleRepeat(function(){
+            #if ((Tone.Transport.nextCycleNumber / #@number_of_cycles) % #@every == 0) {
+              ##{@tone_sequence.mute = false}
+            #} else {
+              ##{@tone_sequence.mute = true}
+            #}
+          #}, duration)
+        #}
       end
 
       def cancel_pause_by_every
@@ -86,6 +94,16 @@ module Negasonic
         @tone_sequence = Tone::Event::Sequence.new(@segments, duration, &block).tap do |sequence|
           sequence.humanize = @humanize
           sequence.probability = @probability
+        end
+      end
+
+      def next_cycle_number
+        if @number_of_cycles > 1
+          (Negasonic::Time.next_cycle_number..(Negasonic::Time.next_cycle_number + @number_of_cycles)).find do |cycle_number|
+            cycle_number % @number_of_cycles == 0
+          end
+        else
+          Negasonic::Time.next_cycle_number
         end
       end
 

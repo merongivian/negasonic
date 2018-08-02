@@ -64,26 +64,12 @@ module Negasonic
 
         @every_event_id = Tone::Transport.schedule_repeat(duration) do
 
-          #if @number_of_cycles > 1
-            #puts "number of expanded cycle : #{next_cycle_number / @number_of_cycles}"
-          #end
-
           if (next_cycle_number / @number_of_cycles) % @every  == 0
             @tone_sequence.mute = false
           else
             @tone_sequence.mute = true
           end
         end
-
-        #%x{
-          #Tone.Transport.scheduleRepeat(function(){
-            #if ((Tone.Transport.nextCycleNumber / #@number_of_cycles) % #@every == 0) {
-              ##{@tone_sequence.mute = false}
-            #} else {
-              ##{@tone_sequence.mute = true}
-            #}
-          #}, duration)
-        #}
       end
 
       def cancel_pause_by_every

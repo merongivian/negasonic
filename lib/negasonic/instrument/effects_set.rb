@@ -19,6 +19,11 @@ module Negasonic
         @nodes = []
       end
 
+      def dispose
+        @nodes.each(&:dispose)
+        reload
+      end
+
       def chain
         return if nodes.empty?
 

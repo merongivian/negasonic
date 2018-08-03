@@ -48,6 +48,8 @@ module Negasonic
       Negasonic::Time.schedule_next_cycle do
         if instrument.effects_changed?(fx_set)
           instrument.swap_effects(fx_set)
+        else
+          fx_set.dispose
         end
         instrument.connect_input_nodes_to_effects
       end

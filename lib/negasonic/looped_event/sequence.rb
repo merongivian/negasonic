@@ -28,7 +28,7 @@ module Negasonic
           end
 
           set_pause_by_every
-          LoopedEvent.start(@tone_sequence)
+          LoopedEvent.start(@tone_sequence, duration)
         end
       end
 
@@ -59,11 +59,7 @@ module Negasonic
       end
 
       def set_pause_by_every
-        duration = (Negasonic::Time::CYCLE_DURATION * @number_of_cycles).to_s +
-          Negasonic::Time::NOTATION
-
         @every_event_id = Tone::Transport.schedule_repeat(duration) do
-
           if (next_cycle_number / @number_of_cycles) % @every  == 0
             @tone_sequence.mute = false
           else
@@ -76,8 +72,8 @@ module Negasonic
         @every_event_id && Tone::Transport.clear(@every_event_id)
       end
 
-      def init_sequence(duration, &block)
-        @tone_sequence = Tone::Event::Sequence.new(@segments, duration, &block).tap do |sequence|
+      def init_sequence(segment_duration, &block)
+        @tone_sequence = Tone::Event::Sequence.new(@segments, segment_duration, &block).tap do |sequence|
           sequence.humanize = @humanize
           sequence.probability = @probability
         end
@@ -91,6 +87,11 @@ module Negasonic
         else
           Negasonic::Time.next_cycle_number
         end
+      end
+
+      def duration
+        (Negasonic::Time::CYCLE_DURATION * @number_of_cycles).to_s +
+          Negasonic::Time::NOTATION
       end
 
       def segment_calculator

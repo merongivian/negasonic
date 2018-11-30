@@ -4,6 +4,8 @@ Ruby DSL for music live coding in the browser, you can play with it in the [onli
 
 **DISCLAIMER:** This is pretty alpha, so use with care if you plan to use it for real performances... Otherwise have fun!
 
+Chat is available in gitter: [nega-sonic/Lobby](https://gitter.im/nega-sonic/Lobby) if you have any questions/suggestions
+
 ## Usage
 
 ### Playing Notes

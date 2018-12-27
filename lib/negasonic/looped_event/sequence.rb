@@ -4,33 +4,9 @@ require 'negasonic/time'
 module Negasonic
   module LoopedEvent
     class Sequence
-      attr_reader :synth
+      attr_reader :synth, :name
 
       include Negasonic::NotesGeneration::DSL
-
-      @all = []
-
-      class << self
-        attr_accessor :all
-
-        def find(name)
-          @all.find do |sequence|
-            sequence.name == name
-          end
-        end
-
-        def add(name)
-          new(name).tap do |sequence|
-            @all << sequence
-          end
-        end
-
-        def find_or_add(name)
-          find(name) || add(name)
-        end
-      end
-
-      attr_reader :name
 
       def initialize(name)
         @name = name
@@ -62,7 +38,7 @@ module Negasonic
             set_pause_by_every
             LoopedEvent.start(@tone_sequence, duration)
           else
-            @new_tone_sequence.dispose
+            new_tone_sequence.dispose
           end
         end
       end

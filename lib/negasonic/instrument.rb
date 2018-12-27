@@ -49,7 +49,7 @@ module Negasonic
     def reload
       @used_input_nodes = 1
       #@cycles = [create_default_cycle]
-      @cycles = []
+      #@cycles = []
     end
 
     def store_current_cycles
@@ -121,11 +121,15 @@ module Negasonic
           end
         end
 
-      Negasonic::LoopedEvent::Sequence.find_or_add(name).tap do |the_cycle|
+      found_or_created_cycle =
+        @cycles.find { |cycle| cycle.name == name } ||
+          Negasonic::LoopedEvent::Sequence.new(name)
+
+      found_or_created_cycle.tap do |the_cycle|
         the_cycle.set_values(cycle_input_node, **opts)
         the_cycle.instance_eval(&block)
+        @used_input_nodes += 1
         unless @cycles.include?(the_cycle)
-          @used_input_nodes += 1
           @cycles << the_cycle
         end
       end

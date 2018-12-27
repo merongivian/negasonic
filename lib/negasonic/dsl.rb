@@ -61,9 +61,9 @@ module Negasonic
       end
     end
 
-    def cycle(**opts, &block)
+    def cycle(name, **opts, &block)
       Negasonic.default_instrument.used = true
-      Negasonic.default_instrument.cycle(**opts, &block)
+      Negasonic.default_instrument.cycle(name, **opts, &block)
     end
 
     def play(*notes)

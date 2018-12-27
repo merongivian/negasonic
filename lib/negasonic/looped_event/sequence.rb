@@ -8,7 +8,36 @@ module Negasonic
 
       include Negasonic::NotesGeneration::DSL
 
-      def initialize(synth, segments = [], humanize: false, probability: 1, expand: 1, every: 1, sustain: 0.15)
+      @all = []
+
+      class << self
+        attr_accessor :all
+
+        def find(name)
+          @all.find do |sequence|
+            sequence.name == name
+          end
+        end
+
+        def add(name)
+          new(name).tap do |sequence|
+            @all << sequence
+          end
+        end
+
+        def find_or_add(name)
+          find(name) || add(name)
+        end
+      end
+
+      attr_reader :name
+
+      def initialize(name)
+        @name = name
+        @tone_sequence = nil
+      end
+
+      def set_values(synth, segments = [], humanize: false, probability: 1, expand: 1, every: 1, sustain: 0.15)
         @synth = synth
         @segments = segments
         @humanize = humanize
@@ -23,20 +52,24 @@ module Negasonic
           sustain =
             `Math.round(#{segment_calculator.duration_number} * #@number_of_cycles * #@sustain).toString()` + Negasonic::Time::NOTATION
 
-          init_sequence(segment_calculator.duration) do |time, note|
+          new_tone_sequence = init_sequence(segment_calculator.duration) do |time, note|
             @synth.trigger_attack_release(note, sustain, time)
           end
 
-          set_pause_by_every
-          LoopedEvent.start(@tone_sequence, duration)
+          if @tone_sequence != new_tone_sequence
+            dispose_tone_sequence
+            @tone_sequence = new_tone_sequence
+            set_pause_by_every
+            LoopedEvent.start(@tone_sequence, duration)
+          else
+            @new_tone_sequence.dispose
+          end
         end
       end
 
-      def dispose
-        schedule_next do
-          cancel_pause_by_every
-          @tone_sequence && @tone_sequence.dispose
-        end
+      def dispose_tone_sequence
+        cancel_pause_by_every
+        @tone_sequence && @tone_sequence.dispose
       end
 
       def play(*notes)
@@ -73,7 +106,7 @@ module Negasonic
       end
 
       def init_sequence(segment_duration, &block)
-        @tone_sequence = Tone::Event::Sequence.new(@segments, segment_duration, &block).tap do |sequence|
+        Tone::Event::Sequence.new(@segments, segment_duration, &block).tap do |sequence|
           sequence.humanize = @humanize
           sequence.probability = @probability
         end

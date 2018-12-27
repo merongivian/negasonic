@@ -48,7 +48,8 @@ module Negasonic
 
     def reload
       @used_input_nodes = 1
-      @cycles = [create_default_cycle]
+      #@cycles = [create_default_cycle]
+      @cycles = []
     end
 
     def store_current_cycles
@@ -102,15 +103,15 @@ module Negasonic
       end
     end
 
-    def create_default_cycle
-      Negasonic::LoopedEvent::Sequence.new(@base_input_node)
-    end
+    #def create_default_cycle
+      #Negasonic::LoopedEvent::Sequence.new(@base_input_node)
+    #end
 
     #########
     ## DSL ##
     #########
 
-    def cycle(**opts, &block)
+    def cycle(name, **opts, &block)
       cycle_input_node =
         if @input_nodes[@used_input_nodes]
           @input_nodes[@used_input_nodes]
@@ -120,10 +121,13 @@ module Negasonic
           end
         end
 
-      Negasonic::LoopedEvent::Sequence.new(cycle_input_node, **opts).tap do |the_cycle|
+      Negasonic::LoopedEvent::Sequence.find_or_add(name).tap do |the_cycle|
+        the_cycle.set_values(cycle_input_node, **opts)
         the_cycle.instance_eval(&block)
-        @used_input_nodes += 1
-        @cycles << the_cycle
+        unless @cycles.include?(the_cycle)
+          @used_input_nodes += 1
+          @cycles << the_cycle
+        end
       end
     end
 

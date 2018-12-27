@@ -33,7 +33,7 @@ module Negasonic
       end
     end
 
-    attr_reader :name, :cycles, :stored_cycles
+    attr_reader :name, :cycles
     attr_accessor :used
 
     def initialize(name)
@@ -43,22 +43,20 @@ module Negasonic
       @used_input_nodes = 1
       @effect_nodes = []
       @used = false
-      store_current_cycles
     end
 
     def reload
       @used_input_nodes = 1
-      #@cycles = [create_default_cycle]
-      #@cycles = []
+      @cycles.each { |cycle| cycle.used = false }
     end
 
-    def store_current_cycles
-      @stored_cycles = @cycles
+    def start
+      @cycles.each(&:start)
     end
 
-    def kill_current_cycles
-      @cycles.each(&:dispose)
-      @cycles = []
+    def kill_not_used_cycles
+      @cycles.reject(&:used).each(&:dispose_next_cycle)
+      @cycles = @cycles.select(&:used)
     end
 
     def base_input_node=(new_base_input_node)
@@ -128,6 +126,7 @@ module Negasonic
       found_or_created_cycle.tap do |the_cycle|
         the_cycle.set_values(cycle_input_node, **opts)
         the_cycle.instance_eval(&block)
+        the_cycle.used = true
         @used_input_nodes += 1
         unless @cycles.include?(the_cycle)
           @cycles << the_cycle

@@ -5,12 +5,14 @@ module Negasonic
   module LoopedEvent
     class Sequence
       attr_reader :synth, :name
+      attr_accessor :used
 
       include Negasonic::NotesGeneration::DSL
 
       def initialize(name)
         @name = name
         @tone_sequence = nil
+        @used = false
       end
 
       def set_values(synth, segments = [], humanize: false, probability: 1, expand: 1, every: 1, sustain: 0.15)
@@ -33,7 +35,7 @@ module Negasonic
           end
 
           if @tone_sequence != new_tone_sequence
-            dispose_tone_sequence
+            dispose
             @tone_sequence = new_tone_sequence
             set_pause_by_every
             LoopedEvent.start(@tone_sequence, duration)
@@ -43,9 +45,13 @@ module Negasonic
         end
       end
 
-      def dispose_tone_sequence
+      def dispose
         cancel_pause_by_every
         @tone_sequence && @tone_sequence.dispose
+      end
+
+      def dispose_next_cycle
+        schedule_next { dispose }
       end
 
       def play(*notes)

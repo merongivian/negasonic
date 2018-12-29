@@ -3,7 +3,7 @@ require 'negasonic/time'
 
 module Negasonic
   module LoopedEvent
-    class Sequence
+    class Cycle
       attr_reader :synth
 
       include Negasonic::NotesGeneration::DSL

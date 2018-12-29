@@ -1,7 +1,7 @@
 require 'js'
 require 'negasonic/looped_event/part'
 require 'negasonic/looped_event/pattern'
-require 'negasonic/looped_event/sequence'
+require 'negasonic/looped_event/cycle'
 
 module Negasonic
   module LoopedEvent

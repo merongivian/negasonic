@@ -103,7 +103,7 @@ module Negasonic
     end
 
     def create_default_cycle
-      Negasonic::LoopedEvent::Sequence.new(@base_input_node)
+      Negasonic::LoopedEvent::Cycle.new(@base_input_node)
     end
 
     #########
@@ -120,7 +120,7 @@ module Negasonic
           end
         end
 
-      Negasonic::LoopedEvent::Sequence.new(cycle_input_node, **opts).tap do |the_cycle|
+      Negasonic::LoopedEvent::Cycle.new(cycle_input_node, **opts).tap do |the_cycle|
         the_cycle.instance_eval(&block)
         @used_input_nodes += 1
         @cycles << the_cycle

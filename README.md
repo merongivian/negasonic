@@ -1,5 +1,7 @@
 # Negasonic
 
+[![Join the chat at https://gitter.im/nega-sonic/Lobby](https://badges.gitter.im/nega-sonic/Lobby.svg)](https://gitter.im/nega-sonic/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 Ruby DSL for music live coding in the browser, you can play with it in the [online editor](https://negasonic.herokuapp.com/)
 
 **DISCLAIMER:** This is pretty alpha, so use with care if you plan to use it for real performances... Otherwise have fun!

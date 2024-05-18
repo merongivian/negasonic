@@ -1,6 +1,6 @@
 # Negasonic
 
-Ruby DSL for music live coding in the browser, you can play with it in the [online editor](negasonic.onrender.com/)
+Ruby DSL for music live coding in the browser, you can play with it in the [online editor](http://negasonic.onrender.com/)
 
 **DISCLAIMER:** This is pretty alpha, so use with care if you plan to use it for real performances... Otherwise have fun!
 

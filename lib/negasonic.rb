@@ -22,5 +22,5 @@ if RUBY_ENGINE == 'opal'
 else
   require 'opal'
 
-  Opal.append_path File.expand_path('../', __FILE__).untaint
+  Opal.append_path File.expand_path('../', __FILE__)
 end
